@@ -189,7 +189,15 @@ public class Inventory : MonoBehaviour
                                     curWeapon.name = selectedItem.MeshName;
                                 }
                             }
-                            break;
+                            else if (curWeapon != null )
+                            {
+                                if (GUI.Button(new Rect(6.5f * scr.x, 4.6f * scr.y, 1 * scr.x, 0.25f * scr.y), "Unequip"))
+                                {
+                                    Destroy(curWeapon);
+                                    weaponInfo = null;
+                                }
+                            }
+                                break;
                     }
                     if (GUI.Button(new Rect(5.5f * scr.x, 4.6f * scr.y, 1 * scr.x, 0.25f * scr.y), "Discard"))
                     {
