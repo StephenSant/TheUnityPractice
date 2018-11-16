@@ -22,9 +22,9 @@ public class CharacterHandler : MonoBehaviour
     public static float curHealth;//current health
     public GUIStyle healthColor;
     public GUIStyle healthColorBackground;
-    public bool isHealing;//When is it going start healing?
-    public float startHealTime = 10;
-    public float healTimer;
+    //public bool isHealing;//When is it going start healing?
+    //public float startHealTime = 10;
+    //public float healTimer;
     #endregion
     #region Level and Exp
     [Header("Levels and Exp")]
@@ -66,7 +66,7 @@ public class CharacterHandler : MonoBehaviour
         curHealth = maxHealth;
         movement.runSpeed = 7 + dexterity;
         LoadStats();
-        healTimer = startHealTime;
+        //healTimer = startHealTime;
 
     }
     #endregion
@@ -99,25 +99,26 @@ public class CharacterHandler : MonoBehaviour
             maxExp += 50;
             levelUp.pointsToAdd++;
         }
-        healTimer -= Time.deltaTime;
+        /*healTimer -= Time.deltaTime;
         if (healTimer <= 0)
         {
             isHealing = true;
+            healTimer = 0;
         }
         else
         {
             isHealing = false;
-        }
+        }*/
 
     }
     #endregion
     #region LateUpdate
     private void LateUpdate()
     {
-        if (isHealing)
+        /*if (isHealing)
         {
-            curHealth++;
-        }
+            curHealth+=.1f;
+        }*/
         //if our current health is greater than our maximum amount of health
         if (curHealth > maxHealth)
         {
@@ -188,7 +189,7 @@ public class CharacterHandler : MonoBehaviour
         if (other.gameObject.GetComponent<DamageOnTouch>())
         {
             curHealth -= other.gameObject.GetComponent<DamageOnTouch>().damage;
-            healTimer = startHealTime;
+            //healTimer = startHealTime;
         }
     }
 }

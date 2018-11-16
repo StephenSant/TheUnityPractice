@@ -49,70 +49,112 @@ public class CharacterMovement : MonoBehaviour
         checkPoint = GetComponent<CheckPoint>();
         stamina = staminaCap;
         staminaDelay = stamina;
+
+        RenderSettings.fog = false;
+        RenderSettings.fogColor = new Color(0, .4f, .8f, 05f);
+        RenderSettings.fogDensity = 0.075f;
     }
     #endregion
     #region Update
     // Update is called once per frame
     void Update()
     {
+        RenderSettings.fog = UnderWater();
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            anim.SetTrigger("Attack");
-        }
-        else { anim.ResetTrigger("Attack"); }
 
         #region Movement
-        if (Input.GetKey(KeyCode.LeftShift) && staminaDelay >= staminaCap)
+        #region Over Water
+        if (UnderWater())
         {
-            running = true;
-        }
+            gravity = 0;
+            if (Input.GetKey(KeyCode.LeftShift) && staminaDelay >= staminaCap)
+            {
+                running = true;
+            }
 
-        else { running = false; }
+            else { running = false; }
 
-        if (running)
-        {
-            speed = runSpeed;
-            stamina--;
-            anim.SetBool("Running", true);
-        }
-        else
-        {
-            speed = walkSpeed;
-            stamina++;
-            staminaDelay++;
-            anim.SetBool("Running", false);
-        }
-        if (stamina >= staminaCap)
-        {
-            stamina = staminaCap;
-        }
-        if (stamina <= 0)
-        {
-            staminaDelay = 0;
-        }
+            if (running)
+            {
+                speed = runSpeed;
+                stamina--;
+            }
+            else
+            {
+                speed = walkSpeed;
+                stamina++;
+                staminaDelay++;
+            }
+            if (stamina >= staminaCap)
+            {
+                stamina = staminaCap;
+            }
+            if (stamina <= 0)
+            {
+                staminaDelay = 0;
+            }
 
-        if (controller.isGrounded)
-        {
-
-            moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));//sets the direction the player is going
-            moveDirection = transform.TransformDirection(moveDirection);//makes the player go in a direction
-            moveDirection *= speed;//makes the player go a certain speed
+            moveDirection = myCamera.transform.forward * Input.GetAxis("Vertical") + myCamera.transform.right * Input.GetAxis("Horizontal");
+            transform.TransformDirection(moveDirection);//makes the player go in a direction
+            moveDirection *= (speed/2);//makes the player go a certain speed 
             if (Input.GetButton("Jump"))
             {
-                moveDirection.y = jumpSpeed;//makes the player jump
+                moveDirection.y = (speed / 2);
             }
+            else if (Input.GetKey(KeyCode.LeftControl))
+            {
+                moveDirection.y = -(speed / 2);
+            }
+            controller.Move(moveDirection * Time.deltaTime);//makes the player move
+
         }
-        moveDirection.y -= gravity * Time.deltaTime;//gives gravity
-        controller.Move(moveDirection * Time.deltaTime);//makes the player move
-        if (Input.GetAxis("Horizontal") > 0.1f || Input.GetAxis("Horizontal") < -0.1f || Input.GetAxis("Vertical") < -0.1f || Input.GetAxis("Vertical") > 0.1f && !running)
-        {
-            anim.SetBool("Moving", true);
-        }
+        #endregion
+        #region On Land
         else
         {
-            anim.SetBool("Moving", false);
+            gravity = 20;
+            if (Input.GetKey(KeyCode.LeftShift) && staminaDelay >= staminaCap)
+            {
+                running = true;
+            }
+
+            else { running = false; }
+
+            if (running)
+            {
+                speed = runSpeed;
+                stamina--;
+            }
+            else
+            {
+                speed = walkSpeed;
+                stamina++;
+                staminaDelay++;
+            }
+            if (stamina >= staminaCap)
+            {
+                stamina = staminaCap;
+            }
+            if (stamina <= 0)
+            {
+                staminaDelay = 0;
+            }
+
+            if (controller.isGrounded)
+            {
+
+                moveDirection = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));//sets the direction the player is going
+                moveDirection = transform.TransformDirection(moveDirection);//makes the player go in a direction
+                moveDirection *= speed;//makes the player go a certain speed
+                if (Input.GetButton("Jump"))
+                {
+                    moveDirection.y = jumpSpeed;//makes the player jump
+                }
+            }
+            moveDirection.y -= gravity * Time.deltaTime;//gives gravity
+            controller.Move(moveDirection * Time.deltaTime);//makes the player move
         }
+        #endregion
         #endregion
         #region Axis'
         //switches between which axis the camera can move
@@ -143,7 +185,11 @@ public class CharacterMovement : MonoBehaviour
 
     }
     #endregion
-    #region Axis functons
+    bool UnderWater()
+    {
+        return gameObject.transform.position.y < 8.5f;
+    }
+    #region Axis Functons
     void MouseXAndY()
     {
         if (Time.deltaTime == 0)//if the game is paused: lock vertical axis
@@ -174,7 +220,7 @@ public class CharacterMovement : MonoBehaviour
     }
     #endregion
 }
-#region RotationalAxis
+#region Rotational Axis
 public enum RotationalAxis//different possible axis to move the camera
 {
     MouseXAndY,

@@ -133,7 +133,7 @@ public class Spider : Enemy
             {
                 CharacterHandler.curHealth -= damage;
                 cooldown = attackCoolDown;
-                target.gameObject.GetComponent<CharacterHandler>().healTimer = target.gameObject.GetComponent<CharacterHandler>().startHealTime;
+                //target.gameObject.GetComponent<CharacterHandler>().healTimer = target.gameObject.GetComponent<CharacterHandler>().startHealTime;
             }
         }
         if (disToTarget < seekRadius)

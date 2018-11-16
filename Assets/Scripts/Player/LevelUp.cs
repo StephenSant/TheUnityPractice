@@ -41,11 +41,11 @@ public class LevelUp : MonoBehaviour
                 GUI.Box(new Rect(0.1f * scrW, 0.6f * scrH, 2f * scrW, 0.5f * scrH), "Points Avalible!\nPress i");
             }
         }
-        if (ready)
+        if (ready && !PauseMenu.paused)
         {
             Time.timeScale = 0;
             Cursor.visible = true;
-            Cursor.lockState = CursorLockMode.Confined;
+            Cursor.lockState = CursorLockMode.None;
             int i = 2;
             GUI.Box(new Rect(6f * scrW, scrH + i * (0.5f * scrH), 2f * scrW, 0.5f * scrH), "Add Points!");
             GUI.Box(new Rect(8f * scrW, scrH + i * (0.5f * scrH), 2f * scrW, 0.5f * scrH), "Points: " + pointsToAdd);
@@ -220,7 +220,7 @@ public class LevelUp : MonoBehaviour
                 ready = false;
                 Time.timeScale = 1;
                 Cursor.visible = false;
-                Cursor.lockState = CursorLockMode.None;
+                Cursor.lockState = CursorLockMode.Locked;
             }
         }
     }

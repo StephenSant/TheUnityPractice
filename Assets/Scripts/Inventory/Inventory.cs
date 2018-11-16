@@ -24,8 +24,7 @@ public class Inventory : MonoBehaviour
     //1 = Head
     #endregion
     void Start()
-    {
-
+    {       
         for (int i = 0; i < inv.Count; i++)
         {
             Debug.Log(inv[i].Name);
@@ -159,10 +158,10 @@ public class Inventory : MonoBehaviour
                             break;
                         case ItemTypes.Craftable:
                             GUI.Box(new Rect(5.5f * scr.x, 3.6f * scr.y, 5 * scr.x, 1 * scr.y), selectedItem.Description + "\n\nAmount: " + selectedItem.Amount + "\nValue: " + selectedItem.Value);
-                            if (GUI.Button(new Rect(6.5f * scr.x, 4.6f * scr.y, 1 * scr.x, 0.25f * scr.y), "Use"))
+                            /*if (GUI.Button(new Rect(6.5f * scr.x, 4.6f * scr.y, 1 * scr.x, 0.25f * scr.y), "Use"))
                             {
 
-                            }
+                            }*/
                             break;
                         case ItemTypes.Misc:
                             GUI.Box(new Rect(5.5f * scr.x, 3.6f * scr.y, 5 * scr.x, 1 * scr.y), selectedItem.Description + "\n\nValue: " + selectedItem.Value);
@@ -344,7 +343,7 @@ public class Inventory : MonoBehaviour
                 {
                     if (inv[i].Type == ItemTypes.Consumables || inv[i].Type == ItemTypes.Craftable)
                     {
-                        if (GUI.Button(new Rect(1.5f * scr.x, 0 * scr.y + i * (0.5f * scr.y), 2.85f * scr.x, 0.5f * scr.y), inv[i].Name + " x" + inv[i].Amount))
+                        if (GUI.Button(new Rect(3f * scr.x, 0 * scr.y + i * (0.5f * scr.y), 2.85f * scr.x, 0.5f * scr.y), inv[i].Name + " x" + inv[i].Amount))
                         {
                             selectedItem = inv[i];
                             Debug.Log(selectedItem.Name);
