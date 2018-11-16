@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<CustomCharacter xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <charName>Adventurer</charName>
+  <charClass>Paladin</charClass>
+  <skin>0</skin>
+  <hair>0</hair>
+  <mouth>0</mouth>
+  <eyes>0</eyes>
+  <clothes>8</clothes>
+  <armour>0</armour>
+  <baseStrength>10</baseStrength>
+  <baseDexterity>4</baseDexterity>
+  <baseConstitution>3</baseConstitution>
+  <baseInteligence>1</baseInteligence>
+  <baseWisdom>1</baseWisdom>
+  <baseCharisma>1</baseCharisma>
+</CustomCharacter>
