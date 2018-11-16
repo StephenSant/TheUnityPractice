@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Xml.Serialization;
+using System.IO;
+using System;
+
 public class CustomisationGet : MonoBehaviour
 {
 
     [Header("Character")]
     public Renderer charMesh;
     public CharacterHandler characterH;
+    private CustomCharacter charData = new CustomCharacter();
 
     #region Start
     private void Start()
@@ -22,19 +27,26 @@ public class CustomisationGet : MonoBehaviour
     #region LoadTexture Function
         void LoadTexture()
     {
+        var serializer = new XmlSerializer(typeof(CustomCharacter));
+        using (var stream = new FileStream(Application.dataPath + "/Data/GameData.xml", FileMode.Open))
+        {
+            charData = serializer.Deserialize(stream) as CustomCharacter;
+        }
+
         //check to see if PlayerPrefs (our save location) HasKey (has a save file...you will need to reference the name of a file)
         if (!PlayerPrefs.HasKey("CharacterName"))
         {
             //if it doesnt then load the CustomSet level
             SceneManager.LoadScene(1);
         }
+        Debug.Log(charData.skin);
         //if it does have a save file then load and SetTexture Skin, Hair, Mouth and Eyes from PlayerPrefs
-        SetTexture("Skin", PlayerPrefs.GetInt("SkinIndex"));
-        SetTexture("Hair", PlayerPrefs.GetInt("HairIndex"));
-        SetTexture("Mouth", PlayerPrefs.GetInt("MouthIndex"));
-        SetTexture("Eyes", PlayerPrefs.GetInt("EyesIndex"));
-        SetTexture("Clothes", PlayerPrefs.GetInt("ClothesIndex"));
-        SetTexture("Armour", PlayerPrefs.GetInt("ArmourIndex"));
+        SetTexture("Skin", charData.skin);
+        SetTexture("Hair", charData.hair);
+        SetTexture("Mouth", charData.mouth);
+        SetTexture("Eyes", charData.eyes);
+        SetTexture("Clothes", charData.clothes);
+        SetTexture("Armour", charData.armour);
         
     }
     

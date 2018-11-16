@@ -2,9 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Xml.Serialization;
+using System.IO;
+using System;
+public class CustomCharacter
+{
+    public string charName, charClass;
+    public int  skin, hair, mouth, eyes, clothes, armour;
+    public int baseStrength, baseDexterity, baseConstitution, baseInteligence, baseWisdom, baseCharisma;
+}
 public class CustomisationSet : MonoBehaviour
 {
-
     #region Variables
     #region Customisation
     [Header("Texture List")]
@@ -51,7 +59,18 @@ public class CustomisationSet : MonoBehaviour
     public int startPoints = 10;
     public CharacterClass charClass = CharacterClass.Barbarian;
     #endregion
+    #region GameData
+    [Header("Game Saves")]
+    public string fileName = "GameData";
+    private CustomCharacter charData = new CustomCharacter();
+    private string fullPath;
     #endregion
+    #endregion
+
+    private void Awake()
+    {
+        fullPath = Application.dataPath + "/Data/" + fileName + ".xml";
+    }
 
     #region Start
     private void Start()//in start we need to set up the following
@@ -250,27 +269,28 @@ public class CustomisationSet : MonoBehaviour
     #region Save
     void Save()//Function called Save this will allow us to save our indexes to PlayerPrefs
     {
-        //SetInt for SkinIndex, HairIndex, MouthIndex, EyesIndex...
-        PlayerPrefs.SetInt("SkinIndex", skinIndex);
-        PlayerPrefs.SetInt("HairIndex", hairIndex);
-        PlayerPrefs.SetInt("MouthIndex", mouthIndex);
-        PlayerPrefs.SetInt("EyesIndex", eyesIndex);
-        PlayerPrefs.SetInt("ClothesIndex", clothesIndex);
-        PlayerPrefs.SetInt("ArmourIndex", armourIndex);
+        charData.hair = hairIndex;
+        charData.skin = skinIndex;
+        charData.mouth = mouthIndex;
+        charData.eyes = eyesIndex;
+        charData.clothes = clothesIndex;
+        charData.armour = armourIndex;
 
-        //SetString CharacterName
-        PlayerPrefs.SetString("CharacterName", charName);
 
-        //Saving Stats
-        PlayerPrefs.SetInt("Strength", strength);
-        PlayerPrefs.SetInt("Dexterity", dexterity);
-        PlayerPrefs.SetInt("Constitution", constitution);
-        PlayerPrefs.SetInt("Inteligence", inteligence);
-        PlayerPrefs.SetInt("Wisdom", wisdom);
-        PlayerPrefs.SetInt("Charisma", charisma);
 
-        //Saving Class
-        PlayerPrefs.SetString("Class", "" + charClass);
+        charData.baseStrength = strength;
+        charData.baseDexterity = dexterity;
+        charData.baseConstitution = constitution;
+        charData.baseInteligence = inteligence;
+        charData.baseWisdom = wisdom;
+        charData.baseCharisma = charisma;
+        charData.charName = charName;
+        charData.charClass = ""+charClass;
+        var serializer = new XmlSerializer(typeof(CustomCharacter));
+        using (var stream = new FileStream(fullPath, FileMode.Create))
+        {
+            serializer.Serialize(stream, charData);
+        }
     }
     #endregion
 
@@ -377,12 +397,12 @@ public class CustomisationSet : MonoBehaviour
         //Random will feed a random amount to the direction 
         if (GUI.Button(new Rect(0.5f * scrW, scrH + i * (0.5f * scrH), scrW, 0.5f * scrH), "Random"))
         {
-            SetTexture("Skin", Random.Range(0, skinMax - 1));
-            SetTexture("Hair", Random.Range(0, hairMax - 1));
-            SetTexture("Eyes", Random.Range(0, eyesMax - 1));
-            SetTexture("Clothes", Random.Range(0, clothesMax - 1));
-            SetTexture("Armour", Random.Range(0, armourMax - 1));
-            SetTexture("Mouth", Random.Range(0, mouthMax - 1));
+            SetTexture("Skin", UnityEngine.Random.Range(0, skinMax - 1));
+            SetTexture("Hair", UnityEngine.Random.Range(0, hairMax - 1));
+            SetTexture("Eyes", UnityEngine.Random.Range(0, eyesMax - 1));
+            SetTexture("Clothes", UnityEngine.Random.Range(0, clothesMax - 1));
+            SetTexture("Armour", UnityEngine.Random.Range(0, armourMax - 1));
+            SetTexture("Mouth", UnityEngine.Random.Range(0, mouthMax - 1));
         }
         //reset will set all to 0 both use SetTexture
         if (GUI.Button(new Rect(1.5f * scrW, scrH + i * (0.5f * scrH), scrW, 0.5f * scrH), "Reset"))
